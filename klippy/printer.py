@@ -12,7 +12,7 @@ from . import gcode, configfile, pins, mcu, toolhead, webhooks
 from .extras.danger_options import get_danger_options
 from . import APP_NAME
 
-message_ready = "Printer is ready"
+message_ready = "BIQU B1 (SKR Pico) Online. Hello Arkeen!"
 
 message_startup = """
 Printer is not ready

@@ -60,8 +60,8 @@ bootloader_request(void)
  ****************************************************************/
 
 #define FREQ_XOSC 12000000
-#define FREQ_SYS (CONFIG_MACH_RP2040 ? 200000000 : CONFIG_CLOCK_FREQ)
-#define FBDIV (FREQ_SYS == 200000000 ? 100 : 125)
+#define FREQ_SYS 250000000          // Target system clock
+#define FBDIV 125                    // Correct: 12 MHz × 125 = 1500 MHz VCO
 #define FREQ_USB 48000000
 
 void set_vsel(void)
@@ -69,7 +69,7 @@ void set_vsel(void)
     // Set internal voltage regulator output to 1.15V on rp2040
 #if CONFIG_MACH_RP2040
     uint32_t cval = vreg_and_chip_reset_hw->vreg;
-    uint32_t vref = VREG_AND_CHIP_RESET_VREG_VSEL_RESET + 1;
+    uint32_t vref = VREG_AND_CHIP_RESET_VREG_VSEL_RESET + 2;
     cval &= ~VREG_AND_CHIP_RESET_VREG_VSEL_BITS;
     cval |= vref << VREG_AND_CHIP_RESET_VREG_VSEL_LSB;
     vreg_and_chip_reset_hw->vreg = cval;
