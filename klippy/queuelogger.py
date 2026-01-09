@@ -1,99 +1,107 @@
-# Code to implement asynchronous logging from a background thread
-#
-# Copyright (C) 2016-2019  Kevin O'Connor <kevin@koconnor.net>
-#
-# This file may be distributed under the terms of the GNU GPLv3 license.
-import logging, logging.handlers, threading, queue, time
+import logging
+import logging.handlers
+import threading
+import time
+
+try:
+    # Python 3.7+
+    from queue import SimpleQueue as _Queue
+except ImportError:
+    from queue import Queue as _Queue  # type: ignore[assignment]
 
 
-# Class to forward all messages through a queue to a background thread
 class QueueHandler(logging.Handler):
-    def __init__(self, queue):
-        logging.Handler.__init__(self)
-        self.queue = queue
+    """Minimal, speed-focused handler that just enqueues records."""
 
-    def emit(self, record):
-        try:
-            self.format(record)
-            record.msg = record.message
-            record.args = None
-            record.exc_info = None
-            self.queue.put_nowait(record)
-        except Exception:
-            self.handleError(record)
+    def __init__(self, q: _Queue):
+        super().__init__()
+        self._queue = q
+
+    def emit(self, record: logging.LogRecord) -> None:
+        # Fast path: no formatting, minimal work.
+        # Let the background handler format and write.
+        self._queue.put(record)
 
 
-# Class to poll a queue in a background thread and log each message
 class QueueListener(logging.handlers.TimedRotatingFileHandler):
-    def __init__(self, filename, rotate_log_at_restart):
-        if rotate_log_at_restart:
-            logging.handlers.TimedRotatingFileHandler.__init__(
-                self, filename, when="S", interval=60 * 60 * 24, backupCount=5
-            )
-        else:
-            logging.handlers.TimedRotatingFileHandler.__init__(
-                self, filename, when="midnight", backupCount=5
-            )
-        self.bg_queue = queue.Queue()
-        self.bg_thread = threading.Thread(target=self._bg_thread)
-        self.bg_thread.start()
+    """Background file logger consuming from a queue."""
+
+    _SENTINEL = object()
+
+    def __init__(self, filename: str, rotate_log_at_restart: bool) -> None:
+        when = "S" if rotate_log_at_restart else "midnight"
+        interval = 60 * 60 * 24 if rotate_log_at_restart else 1
+
+        super().__init__(filename, when=when, interval=interval, backupCount=5)
+
+        self.bg_queue: _Queue = _Queue()
         self.rollover_info = {}
 
-    def _bg_thread(self):
+        t = threading.Thread(target=self._bg_thread, daemon=True)
+        self._bg_thread_obj = t
+        t.start()
+
+    def _bg_thread(self) -> None:
+        q_get = self.bg_queue.get
+        handle = self.handle
+        sentinel = self._SENTINEL
+
         while True:
-            record = self.bg_queue.get(True)
-            if record is None:
+            record = q_get()
+            if record is sentinel:
                 break
-            self.handle(record)
+            handle(record)
 
-    def stop(self):
-        self.bg_queue.put_nowait(None)
-        self.bg_thread.join()
+    def stop(self) -> None:
+        self.bg_queue.put(self._SENTINEL)
+        self._bg_thread_obj.join()
 
-    def set_rollover_info(self, name, info):
+    def set_rollover_info(self, name: str, info: str | None) -> None:
         if info is None:
             self.rollover_info.pop(name, None)
-            return
-        self.rollover_info[name] = info
+        else:
+            self.rollover_info[name] = info
 
-    def clear_rollover_info(self):
+    def clear_rollover_info(self) -> None:
         self.rollover_info.clear()
 
-    def doRollover(self):
-        logging.handlers.TimedRotatingFileHandler.doRollover(self)
-        lines = [
-            self.rollover_info[name] for name in sorted(self.rollover_info)
-        ]
+    def doRollover(self) -> None:
+        super().doRollover()
+
+        lines = [self.rollover_info[n] for n in sorted(self.rollover_info)]
         lines.append(
             "=============== Log rollover at %s ==============="
-            % (time.asctime(),)
+            % time.asctime()
         )
-        self.emit(
-            logging.makeLogRecord(
-                {"msg": "\n".join(lines), "level": logging.INFO}
-            )
-        )
+        msg = "\n".join(lines)
+
+        # Rollover is rare, so simple path here is fine.
+        self.handle(logging.makeLogRecord({"msg": msg, "level": logging.INFO}))
 
 
-MainQueueHandler = None
+_MainQueueHandler: QueueHandler | None = None
 
 
-def setup_bg_logging(filename, debuglevel, rotate_log_at_restart):
-    global MainQueueHandler
-    ql = QueueListener(
-        filename=filename, rotate_log_at_restart=rotate_log_at_restart
-    )
-    MainQueueHandler = QueueHandler(ql.bg_queue)
+def setup_bg_logging(
+    filename: str, debuglevel: int, rotate_log_at_restart: bool
+) -> QueueListener:
+    global _MainQueueHandler
+
+    ql = QueueListener(filename=filename,
+                       rotate_log_at_restart=rotate_log_at_restart)
+    qh = QueueHandler(ql.bg_queue)
+    _MainQueueHandler = qh
+
     root = logging.getLogger()
-    root.addHandler(MainQueueHandler)
+    root.addHandler(qh)
     root.setLevel(debuglevel)
     return ql
 
 
-def clear_bg_logging():
-    global MainQueueHandler
-    if MainQueueHandler is not None:
+def clear_bg_logging() -> None:
+    global _MainQueueHandler
+    if _MainQueueHandler is not None:
         root = logging.getLogger()
-        root.removeHandler(MainQueueHandler)
+        root.removeHandler(_MainQueueHandler)
         root.setLevel(logging.WARNING)
-        MainQueueHandler = None
+        _MainQueueHandler = None

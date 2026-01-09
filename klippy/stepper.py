@@ -17,8 +17,8 @@ class error(Exception):
 # Steppers
 ######################################################################
 
-MIN_BOTH_EDGE_DURATION = 0.000000400
-MIN_OPTIMIZED_BOTH_EDGE_DURATION = 0.000000140
+MIN_BOTH_EDGE_DURATION = 0.000000500
+MIN_OPTIMIZED_BOTH_EDGE_DURATION = 0.000000150
 
 
 # Interface to low-level mcu and chelper code
