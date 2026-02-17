@@ -1,0 +1,2952 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://docs.kalico.gg/API_Server.html">
+      
+      
+        <link rel="prev" href="Protocol.html">
+      
+      
+        <link rel="next" href="MCU_Commands.html">
+      
+      
+      <link rel="icon" href="logo/kalico-32x32.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
+    
+    
+      
+        <title>API server - Kalico Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.a40c8224.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="_kalico/css/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-3YZJ9658GV"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-3YZJ9658GV",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-3YZJ9658GV",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="orange" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-server" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Kalico Documentation" class="md-header__button md-logo" aria-label="Kalico Documentation" data-md-component="logo">
+      
+  <img src="logo/kalico-96x96.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kalico Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API server
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="orange" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="orange" data-md-color-accent="yellow"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/KalicoCrew/kalico/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    KalicoCrew/kalico
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Kalico Documentation" class="md-nav__button md-logo" aria-label="Kalico Documentation" data-md-component="logo">
+      
+  <img src="logo/kalico-96x96.png" alt="logo">
+
+    </a>
+    Kalico Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/KalicoCrew/kalico/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    KalicoCrew/kalico
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Overview.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Features.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="FAQ.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frequently Asked Questions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/KalicoCrew/kalico/releases" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Releases
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Config_Changes.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration Changes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Configuration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Config_Reference.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Kalico_Additions.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kalico additions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Bleeding Edge
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            Bleeding Edge
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Bleeding_Edge.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bleeding Edge Features Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Config_Reference_Bleeding_Edge.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration reference for Bleeding Edge features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Nonlinear_Pressure_Advance.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nonlinear Pressure Advance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="PID.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PID
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="MPC.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Model Predictive Control
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Dockable_Probe.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dockable Probe
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    G-Code Reference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            G-Code Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="G-Codes.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    G-Codes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Command_Templates.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Commands templates
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="G-Code_Shell_Command.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    G-Code Shell Command Extension
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Status_Reference.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Status reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Getting up and running
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Getting up and running
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Migrating_from_Klipper.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Migrating from Klipper
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Installation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="OctoPrint.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using OctoPrint
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="TMC_Drivers.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TMC drivers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Config_checks.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration checks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Rotation_Distance.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rotation distance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Multi_MCU_Homing.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple Micro-controller Homing and Probing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_8" id="__nav_9_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Bed leveling, Probes and Endstops
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_8">
+            <span class="md-nav__icon md-icon"></span>
+            Bed leveling, Probes and Endstops
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Z_Calibration.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Automatic Z-Offset Calibration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Bed_Level.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bed leveling
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Delta_Calibrate.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Delta calibration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Probe_Calibrate.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Probe calibration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="BLTouch.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BL-Touch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Manual_Level.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Manual leveling
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Bed_Mesh.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bed Mesh
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Endstop_Phase.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Endstop phase
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Axis_Twist_Compensation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Axis Twist Compensation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Skew_Correction.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skew correction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_9" id="__nav_9_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tuning
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_9">
+            <span class="md-nav__icon md-icon"></span>
+            Tuning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Measuring_Resonances.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Measuring Resonances
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Resonance_Compensation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resonance Compensation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Pressure_Advance.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pressure advance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Slicers
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Slicers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Slicers.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Slicers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Exclude_Object.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exclude Objects
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Using_PWM_Tools.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using PWM tools
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Developer Documentation
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Code_Overview.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Code overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Kinematics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kinematics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Protocol.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Protocol
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    API server
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="API_Server.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    API server
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#enabling-the-api-socket" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enabling the API socket
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request format
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Protocol
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subscriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Subscriptions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available "endpoints"
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available "endpoints"">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#info" class="md-nav__link">
+    <span class="md-ellipsis">
+      info
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emergency_stop" class="md-nav__link">
+    <span class="md-ellipsis">
+      emergency_stop
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register_remote_method" class="md-nav__link">
+    <span class="md-ellipsis">
+      register_remote_method
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#objectslist" class="md-nav__link">
+    <span class="md-ellipsis">
+      objects/list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#objectsquery" class="md-nav__link">
+    <span class="md-ellipsis">
+      objects/query
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#objectssubscribe" class="md-nav__link">
+    <span class="md-ellipsis">
+      objects/subscribe
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcodehelp" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcode/help
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcodescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcode/script
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcoderestart" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcode/restart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcodefirmware_restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcode/firmware_restart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcodesubscribe_output" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcode/subscribe_output
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#motion_reportdump_stepper" class="md-nav__link">
+    <span class="md-ellipsis">
+      motion_report/dump_stepper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#motion_reportdump_trapq" class="md-nav__link">
+    <span class="md-ellipsis">
+      motion_report/dump_trapq
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adxl345dump_adxl345" class="md-nav__link">
+    <span class="md-ellipsis">
+      adxl345/dump_adxl345
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angledump_angle" class="md-nav__link">
+    <span class="md-ellipsis">
+      angle/dump_angle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_celldump_force" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_cell/dump_force
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause_resumecancel" class="md-nav__link">
+    <span class="md-ellipsis">
+      pause_resume/cancel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause_resumepause" class="md-nav__link">
+    <span class="md-ellipsis">
+      pause_resume/pause
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause_resumeresume" class="md-nav__link">
+    <span class="md-ellipsis">
+      pause_resume/resume
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query_endstopsstatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      query_endstops/status
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="MCU_Commands.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MCU commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CANBUS_protocol.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CANBUS protocol
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Debugging.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Debugging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Benchmarks.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Benchmarks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CONTRIBUTING.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing to Kalico
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Packaging.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Packaging Kalico
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Device Specific Documents
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            Device Specific Documents
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Example_Configs.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example configurations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="SDCard_Updates.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDCard updates
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="RPi_microcontroller.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RPi microcontroller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Beaglebone.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Beaglebone
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Bootloaders.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bootloaders
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Bootloader_Entry.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bootloader Entry
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CANBUS.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CANBUS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CANBUS_Troubleshooting.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CANBUS Troubleshooting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="TSL1401CL_Filament_Width_Sensor.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TSL1401CL filament width sensor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Hall_Filament_Width_Sensor.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hall filament width sensor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Load_Cell.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Load Cells
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Telemetry.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kalico Telemetry
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Contact.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contact
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Sponsors.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sponsors
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#enabling-the-api-socket" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enabling the API socket
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request format
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Protocol
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subscriptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Subscriptions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available "endpoints"
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available "endpoints"">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#info" class="md-nav__link">
+    <span class="md-ellipsis">
+      info
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emergency_stop" class="md-nav__link">
+    <span class="md-ellipsis">
+      emergency_stop
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register_remote_method" class="md-nav__link">
+    <span class="md-ellipsis">
+      register_remote_method
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#objectslist" class="md-nav__link">
+    <span class="md-ellipsis">
+      objects/list
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#objectsquery" class="md-nav__link">
+    <span class="md-ellipsis">
+      objects/query
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#objectssubscribe" class="md-nav__link">
+    <span class="md-ellipsis">
+      objects/subscribe
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcodehelp" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcode/help
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcodescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcode/script
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcoderestart" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcode/restart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcodefirmware_restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcode/firmware_restart
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcodesubscribe_output" class="md-nav__link">
+    <span class="md-ellipsis">
+      gcode/subscribe_output
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#motion_reportdump_stepper" class="md-nav__link">
+    <span class="md-ellipsis">
+      motion_report/dump_stepper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#motion_reportdump_trapq" class="md-nav__link">
+    <span class="md-ellipsis">
+      motion_report/dump_trapq
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adxl345dump_adxl345" class="md-nav__link">
+    <span class="md-ellipsis">
+      adxl345/dump_adxl345
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#angledump_angle" class="md-nav__link">
+    <span class="md-ellipsis">
+      angle/dump_angle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_celldump_force" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_cell/dump_force
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause_resumecancel" class="md-nav__link">
+    <span class="md-ellipsis">
+      pause_resume/cancel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause_resumepause" class="md-nav__link">
+    <span class="md-ellipsis">
+      pause_resume/pause
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause_resumeresume" class="md-nav__link">
+    <span class="md-ellipsis">
+      pause_resume/resume
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query_endstopsstatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      query_endstops/status
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/KalicoCrew/kalico/edit/main/docs/API_Server.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="api-server">API server<a class="headerlink" href="#api-server" title="Permanent link">&para;</a></h1>
+<p>This document describes Kalico's Application Programmer Interface
+(API). This interface enables external applications to query and
+control the Kalico host software.</p>
+<h2 id="enabling-the-api-socket">Enabling the API socket<a class="headerlink" href="#enabling-the-api-socket" title="Permanent link">&para;</a></h2>
+<p>In order to use the API server, the klippy.py host software must be
+started with the <code>-a</code> parameter. For example:</p>
+<div class="highlight"><pre><span></span><code>~/klippy-env/bin/python ~/klipper/klippy/klippy.py ~/printer.cfg -a /tmp/klippy_uds -l /tmp/klippy.log
+</code></pre></div>
+
+<p>This causes the host software to create a Unix Domain Socket. A client
+can then open a connection on that socket and send commands to
+Kalico.</p>
+<p>See the <a href="https://github.com/Arksine/moonraker">Moonraker</a> project for
+a popular tool that can forward HTTP requests to Kalico's API Server
+Unix Domain Socket.</p>
+<h2 id="request-format">Request format<a class="headerlink" href="#request-format" title="Permanent link">&para;</a></h2>
+<p>Messages sent and received on the socket are JSON encoded strings
+terminated by an ASCII 0x03 character:</p>
+<div class="highlight"><pre><span></span><code>&lt;json_object_1&gt;&lt;0x03&gt;&lt;json_object_2&gt;&lt;0x03&gt;...
+</code></pre></div>
+
+<p>Kalico contains a <code>scripts/whconsole.py</code> tool that can perform the
+above message framing. For example:</p>
+<div class="highlight"><pre><span></span><code>~/klipper/scripts/whconsole.py /tmp/klippy_uds
+</code></pre></div>
+
+<p>This tool can read a series of JSON commands from stdin, send them to
+Kalico, and report the results. The tool expects each JSON command to
+be on a single line, and it will automatically append the 0x03
+terminator when transmitting a request. (The Kalico API server does
+not have a newline requirement.)</p>
+<h2 id="api-protocol">API Protocol<a class="headerlink" href="#api-protocol" title="Permanent link">&para;</a></h2>
+<p>The command protocol used on the communication socket is inspired by
+<a href="https://www.jsonrpc.org/">json-rpc</a>.</p>
+<p>A request might look like:</p>
+<p><code>{"id": 123, "method": "info", "params": {}}</code></p>
+<p>and a response might look like:</p>
+<p><code>{"id": 123, "result": {"state_message": "Printer is ready",
+"klipper_path": "/home/pi/klipper", "config_file":
+"/home/pi/printer.cfg", "software_version": "v0.8.0-823-g883b1cb6",
+"hostname": "octopi", "cpu_info": "4 core ARMv7 Processor rev 4
+(v7l)", "state": "ready", "python_path":
+"/home/pi/klippy-env/bin/python", "log_file": "/tmp/klippy.log"}}</code></p>
+<p>Each request must be a JSON dictionary. (This document uses the Python
+term "dictionary" to describe a "JSON object" - a mapping of key/value
+pairs contained within <code>{}</code>.)</p>
+<p>The request dictionary must contain a "method" parameter that is the
+string name of an available Kalico "endpoint".</p>
+<p>The request dictionary may contain a "params" parameter which must be
+of a dictionary type. The "params" provide additional parameter
+information to the Kalico "endpoint" handling the request. Its
+content is specific to the "endpoint".</p>
+<p>The request dictionary may contain an "id" parameter which may be of
+any JSON type. If "id" is present then Kalico will respond to the
+request with a response message containing that "id". If "id" is
+omitted (or set to a JSON "null" value) then Kalico will not provide
+any response to the request. A response message is a JSON dictionary
+containing "id" and "result". The "result" is always a dictionary -
+its contents are specific to the "endpoint" handling the request.</p>
+<p>If the processing of a request results in an error, then the response
+message will contain an "error" field instead of a "result" field. For
+example, the request:
+<code>{"id": 123, "method": "gcode/script", "params": {"script": "G1
+X200"}}</code>
+might result in an error response such as:
+<code>{"id": 123, "error": {"message": "Must home axis
+first: 200.000 0.000 0.000 [0.000]", "error": "WebRequestError"}}</code></p>
+<p>Kalico will always start processing requests in the order that they
+are received. However, some request may not complete immediately,
+which could cause the associated response to be sent out of order with
+respect to responses from other requests. A JSON request will never
+pause the processing of future JSON requests.</p>
+<h2 id="subscriptions">Subscriptions<a class="headerlink" href="#subscriptions" title="Permanent link">&para;</a></h2>
+<p>Some Kalico "endpoint" requests allow one to "subscribe" to future
+asynchronous update messages.</p>
+<p>For example:</p>
+<p><code>{"id": 123, "method": "gcode/subscribe_output", "params":
+{"response_template":{"key": 345}}}</code></p>
+<p>may initially respond with:</p>
+<p><code>{"id": 123, "result": {}}</code></p>
+<p>and cause Kalico to send future messages similar to:</p>
+<p><code>{"params": {"response": "ok B:22.8 /0.0 T0:22.4 /0.0"}, "key": 345}</code></p>
+<p>A subscription request accepts a "response_template" dictionary in the
+"params" field of the request. That "response_template" dictionary is
+used as a template for future asynchronous messages - it may contain
+arbitrary key/value pairs. When sending these future asynchronous
+messages, Kalico will add a "params" field containing a dictionary
+with "endpoint" specific contents to the response template and then
+send that template. If a "response_template" field is not provided
+then it defaults to an empty dictionary (<code>{}</code>).</p>
+<h2 id="available-endpoints">Available "endpoints"<a class="headerlink" href="#available-endpoints" title="Permanent link">&para;</a></h2>
+<p>By convention, Kalico "endpoints" are of the form
+<code>&lt;module_name&gt;/&lt;some_name&gt;</code>. When making a request to an "endpoint",
+the full name must be set in the "method" parameter of the request
+dictionary (eg, <code>{"method"="gcode/restart"}</code>).</p>
+<h3 id="info">info<a class="headerlink" href="#info" title="Permanent link">&para;</a></h3>
+<p>The "info" endpoint is used to obtain system and version information
+from Kalico. It is also used to provide the client's version
+information to Kalico. For example:
+<code>{"id": 123, "method": "info", "params": { "client_info": { "version":
+"v1"}}}</code></p>
+<p>If present, the "client_info" parameter must be a dictionary, but that
+dictionary may have arbitrary contents. Clients are encouraged to
+provide the name of the client and its software version when first
+connecting to the Kalico API server.</p>
+<h3 id="emergency_stop">emergency_stop<a class="headerlink" href="#emergency_stop" title="Permanent link">&para;</a></h3>
+<p>The "emergency_stop" endpoint is used to instruct Kalico to
+transition to a "shutdown" state. It behaves similarly to the G-Code
+<code>M112</code> command. For example:
+<code>{"id": 123, "method": "emergency_stop"}</code></p>
+<h3 id="register_remote_method">register_remote_method<a class="headerlink" href="#register_remote_method" title="Permanent link">&para;</a></h3>
+<p>This endpoint allows clients to register methods that can be called
+from Kalico.  It will return an empty object upon success.</p>
+<p>For example:
+<code>{"id": 123, "method": "register_remote_method",
+"params": {"response_template": {"action": "run_paneldue_beep"},
+"remote_method": "paneldue_beep"}}</code>
+will return:
+<code>{"id": 123, "result": {}}</code></p>
+<p>The remote method <code>paneldue_beep</code> may now be called from KliKalicopper. Note
+that if the method takes parameters they should be provided as keyword
+arguments. Below is an example of how it may called from a gcode_macro:</p>
+<div class="highlight"><pre><span></span><code>[gcode_macro PANELDUE_BEEP]
+gcode:
+  {action_call_remote_method(&quot;paneldue_beep&quot;, frequency=300, duration=1.0)}
+</code></pre></div>
+
+<p>When the PANELDUE_BEEP gcode macro is executed, Kalico would send something
+like the following over the socket:
+<code>{"action": "run_paneldue_beep",
+"params": {"frequency": 300, "duration": 1.0}}</code></p>
+<h3 id="objectslist">objects/list<a class="headerlink" href="#objectslist" title="Permanent link">&para;</a></h3>
+<p>This endpoint queries the list of available printer "objects" that one
+may query (via the "objects/query" endpoint). For example:
+<code>{"id": 123, "method": "objects/list"}</code>
+might return:
+<code>{"id": 123, "result": {"objects":
+["webhooks", "configfile", "heaters", "gcode_move", "query_endstops",
+"idle_timeout", "toolhead", "extruder"]}}</code></p>
+<h3 id="objectsquery">objects/query<a class="headerlink" href="#objectsquery" title="Permanent link">&para;</a></h3>
+<p>This endpoint allows one to query information from printer objects.
+For example:
+<code>{"id": 123, "method": "objects/query", "params": {"objects":
+{"toolhead": ["position"], "webhooks": null}}}</code>
+might return:
+<code>{"id": 123, "result": {"status": {"webhooks": {"state": "ready",
+"state_message": "Printer is ready"}, "toolhead": {"position":
+[0.0, 0.0, 0.0, 0.0]}}, "eventtime": 3051555.377933684}}</code></p>
+<p>The "objects" parameter in the request must be a dictionary containing
+the printer objects that are to be queried - the key contains the
+printer object name and the value is either "null" (to query all
+fields) or a list of field names.</p>
+<p>The response message will contain a "status" field containing a
+dictionary with the queried information - the key contains the printer
+object name and the value is a dictionary containing its fields. The
+response message will also contain an "eventtime" field containing the
+timestamp from when the query was taken.</p>
+<p>Available fields are documented in the
+<a href="Status_Reference.html">Status Reference</a> document.</p>
+<h3 id="objectssubscribe">objects/subscribe<a class="headerlink" href="#objectssubscribe" title="Permanent link">&para;</a></h3>
+<p>This endpoint allows one to query and then subscribe to information
+from printer objects. The endpoint request and response is identical
+to the "objects/query" endpoint. For example:
+<code>{"id": 123, "method": "objects/subscribe", "params":
+{"objects":{"toolhead": ["position"], "webhooks": ["state"]},
+"response_template":{}}}</code>
+might return:
+<code>{"id": 123, "result": {"status": {"webhooks": {"state": "ready"},
+"toolhead": {"position": [0.0, 0.0, 0.0, 0.0]}},
+"eventtime": 3052153.382083195}}</code>
+and result in subsequent asynchronous messages such as:
+<code>{"params": {"status": {"webhooks": {"state": "shutdown"}},
+"eventtime": 3052165.418815847}}</code></p>
+<h3 id="gcodehelp">gcode/help<a class="headerlink" href="#gcodehelp" title="Permanent link">&para;</a></h3>
+<p>This endpoint allows one to query available G-Code commands that have
+a help string defined. For example:
+<code>{"id": 123, "method": "gcode/help"}</code>
+might return:
+<code>{"id": 123, "result": {"RESTORE_GCODE_STATE": "Restore a previously
+saved G-Code state", "PID_CALIBRATE": "Run PID calibration test",
+"QUERY_ADC": "Report the last value of an analog pin", ...}}</code></p>
+<h3 id="gcodescript">gcode/script<a class="headerlink" href="#gcodescript" title="Permanent link">&para;</a></h3>
+<p>This endpoint allows one to run a series of G-Code commands. For example:
+<code>{"id": 123, "method": "gcode/script", "params": {"script": "G90"}}</code></p>
+<p>If the provided G-Code script raises an error, then an error response
+is generated. However, if the G-Code command produces terminal output,
+that terminal output is not provided in the response. (Use the
+"gcode/subscribe_output" endpoint to obtain G-Code terminal output.)</p>
+<p>If there is a G-Code command being processed when this request is
+received, then the provided script will be queued. This delay could be
+significant (eg, if a G-Code wait for temperature command is running).
+The JSON response message is sent when the processing of the script
+fully completes.</p>
+<h3 id="gcoderestart">gcode/restart<a class="headerlink" href="#gcoderestart" title="Permanent link">&para;</a></h3>
+<p>This endpoint allows one to request a restart - it is similar to
+running the G-Code "RESTART" command. For example:
+<code>{"id": 123, "method": "gcode/restart"}</code></p>
+<p>As with the "gcode/script" endpoint, this endpoint only completes
+after any pending G-Code commands complete.</p>
+<h3 id="gcodefirmware_restart">gcode/firmware_restart<a class="headerlink" href="#gcodefirmware_restart" title="Permanent link">&para;</a></h3>
+<p>This is similar to the "gcode/restart" endpoint - it implements the
+G-Code "FIRMWARE_RESTART" command. For example:
+<code>{"id": 123, "method": "gcode/firmware_restart"}</code></p>
+<p>As with the "gcode/script" endpoint, this endpoint only completes
+after any pending G-Code commands complete.</p>
+<h3 id="gcodesubscribe_output">gcode/subscribe_output<a class="headerlink" href="#gcodesubscribe_output" title="Permanent link">&para;</a></h3>
+<p>This endpoint is used to subscribe to G-Code terminal messages that
+are generated by Kalico. For example:
+<code>{"id": 123, "method": "gcode/subscribe_output", "params":
+{"response_template":{}}}</code>
+might later produce asynchronous messages such as:
+<code>{"params": {"response": "// Klipper state: Shutdown"}}</code></p>
+<p>This endpoint is intended to support human interaction via a "terminal
+window" interface. Parsing content from the G-Code terminal output is
+discouraged. Use the "objects/subscribe" endpoint to obtain updates on
+Kalico's state.</p>
+<h3 id="motion_reportdump_stepper">motion_report/dump_stepper<a class="headerlink" href="#motion_reportdump_stepper" title="Permanent link">&para;</a></h3>
+<p>This endpoint is used to subscribe to Kalico's internal stepper
+queue_step command stream for a stepper. Obtaining these low-level
+motion updates may be useful for diagnostic and debugging
+purposes. Using this endpoint may increase Kalico's system load.</p>
+<p>A request may look like:
+<code>{"id": 123, "method":"motion_report/dump_stepper",
+"params": {"name": "stepper_x", "response_template": {}}}</code>
+and might return:
+<code>{"id": 123, "result": {"header": ["interval", "count", "add"]}}</code>
+and might later produce asynchronous messages such as:
+<code>{"params": {"first_clock": 179601081, "first_time": 8.98,
+"first_position": 0, "last_clock": 219686097, "last_time": 10.984,
+"data": [[179601081, 1, 0], [29573, 2, -8685], [16230, 4, -1525],
+[10559, 6, -160], [10000, 976, 0], [10000, 1000, 0], [10000, 1000, 0],
+[10000, 1000, 0], [9855, 5, 187], [11632, 4, 1534], [20756, 2, 9442]]}}</code></p>
+<p>The "header" field in the initial query response is used to describe
+the fields found in later "data" responses.</p>
+<h3 id="motion_reportdump_trapq">motion_report/dump_trapq<a class="headerlink" href="#motion_reportdump_trapq" title="Permanent link">&para;</a></h3>
+<p>This endpoint is used to subscribe to Kalico's internal "trapezoid
+motion queue". Obtaining these low-level motion updates may be useful
+for diagnostic and debugging purposes. Using this endpoint may
+increase Kalico's system load.</p>
+<p>A request may look like:
+<code>{"id": 123, "method": "motion_report/dump_trapq", "params":
+{"name": "toolhead", "response_template":{}}}</code>
+and might return:
+<code>{"id": 1, "result": {"header": ["time", "duration",
+"start_velocity", "acceleration", "start_position", "direction"]}}</code>
+and might later produce asynchronous messages such as:
+<code>{"params": {"data": [[4.05, 1.0, 0.0, 0.0, [300.0, 0.0, 0.0],
+[0.0, 0.0, 0.0]], [5.054, 0.001, 0.0, 3000.0, [300.0, 0.0, 0.0],
+[-1.0, 0.0, 0.0]]]}}</code></p>
+<p>The "header" field in the initial query response is used to describe
+the fields found in later "data" responses.</p>
+<h3 id="adxl345dump_adxl345">adxl345/dump_adxl345<a class="headerlink" href="#adxl345dump_adxl345" title="Permanent link">&para;</a></h3>
+<p>This endpoint is used to subscribe to ADXL345 accelerometer data.
+Obtaining these low-level motion updates may be useful for diagnostic
+and debugging purposes. Using this endpoint may increase Kalico's
+system load.</p>
+<p>A request may look like:
+<code>{"id": 123, "method":"adxl345/dump_adxl345",
+"params": {"sensor": "adxl345", "response_template": {}}}</code>
+and might return:
+<code>{"id": 123,"result":{"header":["time","x_acceleration","y_acceleration",
+"z_acceleration"]}}</code>
+and might later produce asynchronous messages such as:
+<code>{"params":{"overflows":0,"data":[[3292.432935,-535.44309,-1529.8374,9561.4],
+[3292.433256,-382.45935,-1606.32927,9561.48375]]}}</code></p>
+<p>The "header" field in the initial query response is used to describe
+the fields found in later "data" responses.</p>
+<h3 id="angledump_angle">angle/dump_angle<a class="headerlink" href="#angledump_angle" title="Permanent link">&para;</a></h3>
+<p>This endpoint is used to subscribe to
+<a href="Config_Reference.html#angle">angle sensor data</a>. Obtaining these
+low-level motion updates may be useful for diagnostic and debugging
+purposes. Using this endpoint may increase Kalico's system load.</p>
+<p>A request may look like:
+<code>{"id": 123, "method":"angle/dump_angle",
+"params": {"sensor": "my_angle_sensor", "response_template": {}}}</code>
+and might return:
+<code>{"id": 123,"result":{"header":["time","angle"]}}</code>
+and might later produce asynchronous messages such as:
+<code>{"params":{"position_offset":3.151562,"errors":0,
+"data":[[1290.951905,-5063],[1290.952321,-5065]]}}</code></p>
+<p>The "header" field in the initial query response is used to describe
+the fields found in later "data" responses.</p>
+<h3 id="load_celldump_force">load_cell/dump_force<a class="headerlink" href="#load_celldump_force" title="Permanent link">&para;</a></h3>
+<p>This endpoint is used to subscribe to force data produced by a load_cell.
+Using this endpoint may increase Klipper's system load.</p>
+<p>A request may look like:
+<code>{"id": 123, "method":"load_cell/dump_force",
+"params": {"sensor": "load_cell", "response_template": {}}}</code>
+and might return:
+<code>{"id": 123,"result":{"header":["time", "force (g)", "counts", "tare_counts"]}}</code>
+and might later produce asynchronous messages such as:
+<code>{"params":{"data":[[3292.432935, 40.65, 562534, -234467]]}}</code></p>
+<p>The "header" field in the initial query response is used to describe
+the fields found in later "data" responses.</p>
+<h3 id="pause_resumecancel">pause_resume/cancel<a class="headerlink" href="#pause_resumecancel" title="Permanent link">&para;</a></h3>
+<p>This endpoint is similar to running the "PRINT_CANCEL" G-Code command.
+For example:
+<code>{"id": 123, "method": "pause_resume/cancel"}</code></p>
+<p>As with the "gcode/script" endpoint, this endpoint only completes
+after any pending G-Code commands complete.</p>
+<h3 id="pause_resumepause">pause_resume/pause<a class="headerlink" href="#pause_resumepause" title="Permanent link">&para;</a></h3>
+<p>This endpoint is similar to running the "PAUSE" G-Code command. For
+example:
+<code>{"id": 123, "method": "pause_resume/pause"}</code></p>
+<p>As with the "gcode/script" endpoint, this endpoint only completes
+after any pending G-Code commands complete.</p>
+<h3 id="pause_resumeresume">pause_resume/resume<a class="headerlink" href="#pause_resumeresume" title="Permanent link">&para;</a></h3>
+<p>This endpoint is similar to running the "RESUME" G-Code command. For
+example:
+<code>{"id": 123, "method": "pause_resume/resume"}</code></p>
+<p>As with the "gcode/script" endpoint, this endpoint only completes
+after any pending G-Code commands complete.</p>
+<h3 id="query_endstopsstatus">query_endstops/status<a class="headerlink" href="#query_endstopsstatus" title="Permanent link">&para;</a></h3>
+<p>This endpoint will query the active endpoints and return their status.
+For example:
+<code>{"id": 123, "method": "query_endstops/status"}</code>
+might return:
+<code>{"id": 123, "result": {"y": "open", "x": "open", "z": "TRIGGERED"}}</code></p>
+<p>As with the "gcode/script" endpoint, this endpoint only completes
+after any pending G-Code commands complete.</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://kalico.gg/discord" target="_blank" rel="noopener" title="Join our Discord server!" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M524.531 69.836a1.5 1.5 0 0 0-.764-.7A485 485 0 0 0 404.081 32.03a1.82 1.82 0 0 0-1.923.91 338 338 0 0 0-14.9 30.6 447.9 447.9 0 0 0-134.426 0 310 310 0 0 0-15.135-30.6 1.89 1.89 0 0 0-1.924-.91 483.7 483.7 0 0 0-119.688 37.107 1.7 1.7 0 0 0-.788.676C39.068 183.651 18.186 294.69 28.43 404.354a2.02 2.02 0 0 0 .765 1.375 487.7 487.7 0 0 0 146.825 74.189 1.9 1.9 0 0 0 2.063-.676A348 348 0 0 0 208.12 430.4a1.86 1.86 0 0 0-1.019-2.588 321 321 0 0 1-45.868-21.853 1.885 1.885 0 0 1-.185-3.126 251 251 0 0 0 9.109-7.137 1.82 1.82 0 0 1 1.9-.256c96.229 43.917 200.41 43.917 295.5 0a1.81 1.81 0 0 1 1.924.233 235 235 0 0 0 9.132 7.16 1.884 1.884 0 0 1-.162 3.126 301.4 301.4 0 0 1-45.89 21.83 1.875 1.875 0 0 0-1 2.611 391 391 0 0 0 30.014 48.815 1.86 1.86 0 0 0 2.063.7A486 486 0 0 0 610.7 405.729a1.88 1.88 0 0 0 .765-1.352c12.264-126.783-20.532-236.912-86.934-334.541M222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.241 52.844-59.241c29.665 0 53.306 26.82 52.843 59.239 0 32.654-23.41 59.241-52.843 59.241m195.38 0c-28.971 0-52.843-26.587-52.843-59.239s23.409-59.241 52.843-59.241c29.667 0 53.307 26.82 52.844 59.239 0 32.654-23.177 59.241-52.844 59.241"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.top", "navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.action.edit", "optimize"], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+    
+  </body>
+</html>

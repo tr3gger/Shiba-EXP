@@ -1,0 +1,2683 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://docs.kalico.gg/MPC.html">
+      
+      
+        <link rel="prev" href="PID.html">
+      
+      
+        <link rel="next" href="Dockable_Probe.html">
+      
+      
+      <link rel="icon" href="logo/kalico-32x32.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
+    
+    
+      
+        <title>Model Predictive Control - Kalico Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.a40c8224.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="_kalico/css/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-3YZJ9658GV"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-3YZJ9658GV",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-3YZJ9658GV",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="orange" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#model-predictive-control" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Kalico Documentation" class="md-header__button md-logo" aria-label="Kalico Documentation" data-md-component="logo">
+      
+  <img src="logo/kalico-96x96.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kalico Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Model Predictive Control
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="orange" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="orange" data-md-color-accent="yellow"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/KalicoCrew/kalico/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    KalicoCrew/kalico
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Kalico Documentation" class="md-nav__button md-logo" aria-label="Kalico Documentation" data-md-component="logo">
+      
+  <img src="logo/kalico-96x96.png" alt="logo">
+
+    </a>
+    Kalico Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/KalicoCrew/kalico/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    KalicoCrew/kalico
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Overview.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Features.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="FAQ.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frequently Asked Questions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/KalicoCrew/kalico/releases" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Releases
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Config_Changes.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration Changes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Configuration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Config_Reference.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Kalico_Additions.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kalico additions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Bleeding Edge
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            Bleeding Edge
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Bleeding_Edge.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bleeding Edge Features Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Config_Reference_Bleeding_Edge.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration reference for Bleeding Edge features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Nonlinear_Pressure_Advance.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nonlinear Pressure Advance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="PID.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PID
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="MPC.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Model Predictive Control
+  </span>
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Dockable_Probe.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dockable Probe
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    G-Code Reference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            G-Code Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="G-Codes.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    G-Codes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Command_Templates.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Commands templates
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="G-Code_Shell_Command.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    G-Code Shell Command Extension
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Status_Reference.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Status reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Getting up and running
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Getting up and running
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Migrating_from_Klipper.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Migrating from Klipper
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Installation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="OctoPrint.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using OctoPrint
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="TMC_Drivers.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TMC drivers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Config_checks.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration checks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Rotation_Distance.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rotation distance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Multi_MCU_Homing.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple Micro-controller Homing and Probing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_8" id="__nav_9_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Bed leveling, Probes and Endstops
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_8">
+            <span class="md-nav__icon md-icon"></span>
+            Bed leveling, Probes and Endstops
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Z_Calibration.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Automatic Z-Offset Calibration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Bed_Level.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bed leveling
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Delta_Calibrate.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Delta calibration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Probe_Calibrate.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Probe calibration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="BLTouch.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BL-Touch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Manual_Level.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Manual leveling
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Bed_Mesh.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bed Mesh
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Endstop_Phase.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Endstop phase
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Axis_Twist_Compensation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Axis Twist Compensation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Skew_Correction.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skew correction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_9" id="__nav_9_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tuning
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_9">
+            <span class="md-nav__icon md-icon"></span>
+            Tuning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Measuring_Resonances.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Measuring Resonances
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Resonance_Compensation.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Resonance Compensation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Pressure_Advance.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pressure advance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Slicers
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Slicers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Slicers.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Slicers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Exclude_Object.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exclude Objects
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Using_PWM_Tools.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using PWM tools
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Developer Documentation
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Code_Overview.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Code overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Kinematics.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kinematics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Protocol.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Protocol
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="API_Server.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API server
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="MCU_Commands.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MCU commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CANBUS_protocol.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CANBUS protocol
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Debugging.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Debugging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Benchmarks.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Benchmarks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CONTRIBUTING.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing to Kalico
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Packaging.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Packaging Kalico
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Device Specific Documents
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            Device Specific Documents
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Example_Configs.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example configurations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="SDCard_Updates.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SDCard updates
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="RPi_microcontroller.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RPi microcontroller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Beaglebone.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Beaglebone
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Bootloaders.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bootloaders
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Bootloader_Entry.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bootloader Entry
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CANBUS.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CANBUS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CANBUS_Troubleshooting.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CANBUS Troubleshooting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="TSL1401CL_Filament_Width_Sensor.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TSL1401CL filament width sensor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Hall_Filament_Width_Sensor.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hall filament width sensor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Load_Cell.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Load Cells
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Telemetry.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kalico Telemetry
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Contact.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contact
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Sponsors.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sponsors
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/KalicoCrew/kalico/edit/main/docs/MPC.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="model-predictive-control">Model Predictive Control<a class="headerlink" href="#model-predictive-control" title="Permanent link">&para;</a></h1>
+<p>Model Predictive Control (MPC) is an advanced temperature control method that offers an alternative to traditional PID control. MPC leverages a system model to simulate the temperature of the hotend and adjusts the heater power to align with the target temperature.  </p>
+<p>Unlike reactive methods, MPC operates proactively, adjusting in anticipation of temperature fluctuations. It utilizes a model of the hotend, considering factors such as the thermal masses of the system, heater power, heat loss to ambient air, and fans, and heat transfer into the filament. This model allows MPC to predict the amount of heat energy that will be dissipated from the hotend over a given duration, and it compensates for this by adjusting the heater power accordingly. As a result, MPC can accurately calculate the necessary heat energy input to maintain a steady temperature or to transition to a new temperature.</p>
+<p>MPC offers several advantages over PID control:</p>
+<ul>
+<li><strong>Faster and more responsive temperature control:</strong> MPC’s proactive approach allows it to respond more quickly and accurately to changes in temperature from fans or flow rate changes. </li>
+<li><strong>Broad functionality with single calibration:</strong> Once calibrated, MPC functions effectively across a wide range of printing temperatures.  </li>
+<li><strong>Simplified calibration process:</strong> MPC is easier to calibrate compared to traditional PID control. </li>
+<li><strong>Compatibility with all hotend sensor types:</strong> MPC works with all types of hotend sensors, including those that produce noisy temperature readings.</li>
+<li><strong>Versatility with heater types:</strong> MPC performs well with standard cartridge heaters and PTC heaters.</li>
+<li><strong>Effective for high and low flow hotends:</strong> Regardless of the flow rate of the hotend, MPC maintains effective temperature control.     </li>
+</ul>
+<div class="admonition danger">
+<p class="admonition-title">Caution</p>
+<p>This feature controls the portions of the 3D printer that can get very hot. All standard Kalico warnings apply. Please report all issues and bugs to <a href="https://github.com/KalicoCrew/kalico/issues">GitHub</a> or <a href="Contact.html#discord">Discord</a>.</p>
+</div>
+<h1 id="basic-configuration">Basic Configuration<a class="headerlink" href="#basic-configuration" title="Permanent link">&para;</a></h1>
+<p>To use MPC as the temperature controller for the extruder use the following basic configuration block.</p>
+<div class="highlight"><pre><span></span><code>[extruder]
+control: mpc
+heater_power: 50  
+cooling_fan:
+filament_diameter: 1.75
+filament_density: 1.20
+filament_heat_capacity: 1.8 
+</code></pre></div>
+
+<ul>
+<li><code>control: mpc</code><br />
+<em>Required</em><br />
+  The temperature control method.</li>
+</ul>
+<ul>
+<li><code>heater_power: 50</code><br />
+<em>Required</em> <br />
+  The nameplate heater power in watts.<br />
+  For a PTC, a non-linear heater, MPC may not work optimally due
+  to the change in power output relative to heater temperature for this style of
+  heater. Setting heater_power to the power output at the expected printing
+  temperature is recommended.</li>
+</ul>
+<ul>
+<li><code>cooling_fan:</code><br />
+<em>Default Value: Nothing</em><br />
+  The fan that is cooling extruded filament and the hotend. Default is no fan so 
+  there will be no fan taken into account for controlling the heater.
+  Specifying "fan" will automatically use the part cooling fan.</li>
+</ul>
+<ul>
+<li><code>filament_diameter: 1.75</code><br />
+<em>Default Value: 1.75 (mm)</em><br />
+  This is the filament diameter.  </li>
+</ul>
+<ul>
+<li><code>filament_density: 1.20</code> <br />
+<em>Default Value: 1.20 (g/mm^3)</em><br />
+  This is the material density of the filament being printed.</li>
+</ul>
+<ul>
+<li><code>filament_heat_capacity: 1.80</code><br />
+<em>Default Value: 1.80 (J/g/K)</em><br />
+  This is the material specific heat capacity of the filament being printed.  </li>
+</ul>
+<h2 id="optional-config-parameters">Optional Config Parameters<a class="headerlink" href="#optional-config-parameters" title="Permanent link">&para;</a></h2>
+<p>These can be specified in the config but should not need to be changed from the default values for most users.</p>
+<ul>
+<li><code>maximum_retract:</code><br />
+<em>Default Value: 2.0 (mm)</em><br />
+  This value clamps how much the extruder is allowed to go backwards in a single period during MPC FFF calculations. This lets the filament power go negative and add a small amount of energy to the system.  </li>
+</ul>
+<ul>
+<li><code>target_reach_time:</code><br />
+<em>Default Value: 2.0 (sec)</em>  </li>
+</ul>
+<ul>
+<li><code>smoothing:</code><br />
+<em>Default Value: 0.83 (sec)</em><br />
+  This parameter affects how quickly the model learns and it represents the ratio of temperature difference applied per second. A value of 1.0 represents no smoothing used in the model.  </li>
+</ul>
+<ul>
+<li><code>min_ambient_change:</code><br />
+<em>Default Value: 1.0 (deg C/s)</em><br />
+  Larger values of MIN_AMBIENT_CHANGE will result in faster convergence but will also cause the simulated ambient temperature to flutter somewhat chaotically around the ideal value.  </li>
+</ul>
+<ul>
+<li><code>steady_state_rate:</code><br />
+<em>Default Value: 0.5 (deg C/s)</em>  </li>
+</ul>
+<ul>
+<li><code>ambient_temp_sensor: temperature_sensor &lt;sensor_name&gt;</code><br />
+<em>Default Value: MPC ESTIMATE</em><br />
+  It is recommended not to specify this parameter and let MPC will estimate. This is used for initial state temperature and calibration but not for actual control.
+  Any temperature sensor could be used, but the sensor should be in proximity to the hotend or measuring the ambient air surrounding the hotend.  </li>
+</ul>
+<h2 id="ptc-heater-power">PTC Heater Power<a class="headerlink" href="#ptc-heater-power" title="Permanent link">&para;</a></h2>
+<p>The <code>heater power:</code> for PTC style heaters is recommended to be set at the normal print temperature for the printer. Some common PTC heaters are given below for reference. If your heater is not listed the manufacturer should be able to provide a temperature and power curve.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Heater Temp (C)</th>
+<th style="text-align: center;">Rapido 2 (W)</th>
+<th style="text-align: center;">Rapido 1 (W)</th>
+<th style="text-align: center;">Dragon Ace old (W)</th>
+<th style="text-align: center;">Dragon Ace new (W)</th>
+<th style="text-align: center;">Revo 40 (W)</th>
+<th style="text-align: center;">Revo 60 (W)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">180</td>
+<td style="text-align: center;">72</td>
+<td style="text-align: center;">52</td>
+<td style="text-align: center;">51</td>
+<td style="text-align: center;">66</td>
+<td style="text-align: center;">30</td>
+<td style="text-align: center;">45</td>
+</tr>
+<tr>
+<td style="text-align: center;">200</td>
+<td style="text-align: center;">70</td>
+<td style="text-align: center;">51</td>
+<td style="text-align: center;">48</td>
+<td style="text-align: center;">63</td>
+<td style="text-align: center;">29</td>
+<td style="text-align: center;">44</td>
+</tr>
+<tr>
+<td style="text-align: center;">220</td>
+<td style="text-align: center;">67</td>
+<td style="text-align: center;">50</td>
+<td style="text-align: center;">46</td>
+<td style="text-align: center;">60</td>
+<td style="text-align: center;">28</td>
+<td style="text-align: center;">43</td>
+</tr>
+<tr>
+<td style="text-align: center;">240</td>
+<td style="text-align: center;">65</td>
+<td style="text-align: center;">49</td>
+<td style="text-align: center;">44</td>
+<td style="text-align: center;">58</td>
+<td style="text-align: center;">28</td>
+<td style="text-align: center;">42</td>
+</tr>
+<tr>
+<td style="text-align: center;">260</td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">48</td>
+<td style="text-align: center;">43</td>
+<td style="text-align: center;">55</td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">40</td>
+</tr>
+<tr>
+<td style="text-align: center;">280</td>
+<td style="text-align: center;">62</td>
+<td style="text-align: center;">47</td>
+<td style="text-align: center;">41</td>
+<td style="text-align: center;">53</td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">39</td>
+</tr>
+<tr>
+<td style="text-align: center;">300</td>
+<td style="text-align: center;">60</td>
+<td style="text-align: center;">46</td>
+<td style="text-align: center;">39</td>
+<td style="text-align: center;">51</td>
+<td style="text-align: center;">26</td>
+<td style="text-align: center;">38</td>
+</tr>
+</tbody>
+</table>
+<h2 id="filament-feed-forward-configuration">Filament Feed Forward Configuration<a class="headerlink" href="#filament-feed-forward-configuration" title="Permanent link">&para;</a></h2>
+<p>The filament feed forward (FFF) feature allows MPC to look forward and see changes in extrusion rates which could require more or less heat input to maintain target temperature. This feature substantially improves the accuracy and responsiveness of the model during printing. It is enabled by default and can be defined is more detail with the <code>filament_density</code> and <code>filament_heat_capacity</code> config parameters. The default values are set to cover a wide range of standard materials including ABS, ASA, PLA, PETG. </p>
+<p>FFF parameters can be set, for the printer session, via the <code>MPC_SET</code> G-Code command:  </p>
+<p><code>MPC_SET HEATER=&lt;heater&gt; FILAMENT_DENSITY=&lt;value&gt; FILAMENT_HEAT_CAPACITY=&lt;value&gt; [FILAMENT_TEMP=&lt;sensor|ambient|&lt;value&gt;&gt;]</code></p>
+<ul>
+<li><code>HEATER</code>:<br />
+  Only extruder is supported</li>
+</ul>
+<ul>
+<li><code>FILAMENT_DENSITY</code>:<br />
+  Filament density in g/mm^3</li>
+</ul>
+<ul>
+<li><code>FILAMENT_HEAT_CAPACITY</code>:<br />
+  Filament heat capacity in J/g/K</li>
+</ul>
+<ul>
+<li><code>FILAMENT_TEMP</code>:<br />
+  This can be set to either <code>sensor</code>, <code>ambient</code>, or a set temperature value. FFF will use the specific energy required to heat the filament and the power loss will be calculated based on the temperature delta.  </li>
+</ul>
+<p>For example, updating the filament material properties for ASA would be:   </p>
+<div class="highlight"><pre><span></span><code>MPC_SET HEATER=extruder FILAMENT_DENSITY=1.07 FILAMENT_HEAT_CAPACITY=1.7  
+</code></pre></div>
+
+<h2 id="filament-physical-properties">Filament Physical Properties<a class="headerlink" href="#filament-physical-properties" title="Permanent link">&para;</a></h2>
+<p>MPC works best knowing how much energy (in Joules) it takes to heat 1mm of filament by 1°C. The material values from the tables below have been curated from popular filament manufacturers and material data references. These values are sufficient for MPC to implement the FFF feature.  Advanced users could tune the <code>filament_density</code> and <code>filament_heat_capacity</code> parameters based on manufacturers datasheets. </p>
+<h3 id="common-materials">Common Materials<a class="headerlink" href="#common-materials" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Material</th>
+<th style="text-align: center;">Density [g/cm³]</th>
+<th style="text-align: center;">Specific heat [J/g/K]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PLA</td>
+<td style="text-align: center;">1.25</td>
+<td style="text-align: center;">1.8 - 2.2</td>
+</tr>
+<tr>
+<td>PETG</td>
+<td style="text-align: center;">1.27</td>
+<td style="text-align: center;">1.7 - 2.2</td>
+</tr>
+<tr>
+<td>PC+ABS</td>
+<td style="text-align: center;">1.15</td>
+<td style="text-align: center;">1.5 - 2.2</td>
+</tr>
+<tr>
+<td>ABS</td>
+<td style="text-align: center;">1.06</td>
+<td style="text-align: center;">1.25 - 2.4</td>
+</tr>
+<tr>
+<td>ASA</td>
+<td style="text-align: center;">1.07</td>
+<td style="text-align: center;">1.3 - 2.1</td>
+</tr>
+<tr>
+<td>PA6</td>
+<td style="text-align: center;">1.12</td>
+<td style="text-align: center;">2 - 2.5</td>
+</tr>
+<tr>
+<td>PA</td>
+<td style="text-align: center;">1.15</td>
+<td style="text-align: center;">2 - 2.5</td>
+</tr>
+<tr>
+<td>PC</td>
+<td style="text-align: center;">1.20</td>
+<td style="text-align: center;">1.1 - 1.9</td>
+</tr>
+<tr>
+<td>TPU</td>
+<td style="text-align: center;">1.21</td>
+<td style="text-align: center;">1.5 - 2</td>
+</tr>
+<tr>
+<td>TPU-90A</td>
+<td style="text-align: center;">1.15</td>
+<td style="text-align: center;">1.5 - 2</td>
+</tr>
+<tr>
+<td>TPU-95A</td>
+<td style="text-align: center;">1.22</td>
+<td style="text-align: center;">1.5 - 2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="common-carbon-fiber-filled-materials">Common Carbon Fiber Filled Materials<a class="headerlink" href="#common-carbon-fiber-filled-materials" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Material</th>
+<th style="text-align: center;">Density [g/cm³]</th>
+<th style="text-align: center;">Specific heat [J/g/K]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ABS-CF</td>
+<td style="text-align: center;">1.11</td>
+<td style="text-align: center;">^</td>
+</tr>
+<tr>
+<td>ASA-CF</td>
+<td style="text-align: center;">1.11</td>
+<td style="text-align: center;">^</td>
+</tr>
+<tr>
+<td>PA6-CF</td>
+<td style="text-align: center;">1.19</td>
+<td style="text-align: center;">^</td>
+</tr>
+<tr>
+<td>PC+ABS-CF</td>
+<td style="text-align: center;">1.22</td>
+<td style="text-align: center;">^</td>
+</tr>
+<tr>
+<td>PC+CF</td>
+<td style="text-align: center;">1.36</td>
+<td style="text-align: center;">^</td>
+</tr>
+<tr>
+<td>PLA-CF</td>
+<td style="text-align: center;">1.29</td>
+<td style="text-align: center;">^</td>
+</tr>
+<tr>
+<td>PETG-CF</td>
+<td style="text-align: center;">1.30</td>
+<td style="text-align: center;">^</td>
+</tr>
+</tbody>
+</table>
+<p>^ Use the specific heat from the base polymer  </p>
+<h1 id="calibration">Calibration<a class="headerlink" href="#calibration" title="Permanent link">&para;</a></h1>
+<p>The MPC default calibration routine takes the following steps:</p>
+<blockquote>
+<ol>
+<li>Cool to ambient: The calibration routine needs to know the approximate ambient temperature and waits until the hotend temperature stabilises and stops decreasing relative to ambient.</li>
+<li>Heat past 200°C: Measure the point where the temperature is increasing most rapidly, and the time and temperature at that point. Also, three temperature measurements are needed at some point after the initial latency has taken effect. </li>
+<li>Hold temperature while measuring ambient heat-loss: At this point enough is known for the MPC algorithm to engage. The calibration routine makes a best guess at the overshoot past 200°C which will occur and targets this temperature for about a minute while ambient heat-loss is measured without and with the fan engaged (if a <code>cooling_fan</code> is specified).</li>
+<li>The MPC calibration routine creates the appropriate model constants. At this time the model parameters are temporary and not yet saved to the printer configuration.  </li>
+</ol>
+</blockquote>
+<p>The MPC calibration routine must be run for each heater, to be controlled by MPC, in order to determine the model parameters. For an MPC calibration to be successful an extruder must be able to reach 200C. Calibration is performed with the following G-code command.</p>
+<p><code>MPC_CALIBRATE HEATER=&lt;heater&gt; [TARGET=&lt;temperature&gt;] [FAN_BREAKPOINTS=&lt;value&gt;]</code>  </p>
+<ul>
+<li><code>HEATER=&lt;heater&gt;</code>:<br />
+  The extruder heater to be calibrated.  </li>
+</ul>
+<ul>
+<li><code>TARGET=&lt;temperature&gt;</code>:<br />
+<em>Default Value: 200 (deg C)</em><br />
+  Sets the calibration temperature. The default of 200C is a good target for the extruder. MPC calibration is temperature independent, so calibrating the extruder at higher temperatures will not necessarily produce better model parameters. This is an area of exploration for advanced users.  </li>
+</ul>
+<ul>
+<li><code>FAN_BREAKPOINTS=&lt;value&gt;</code>:<br />
+<em>Default Value: 3</em><br />
+  Sets the number off fan setpoint to test during calibration. An arbitrary number of breakpoints can be specified e.g. 7 breakpoints would result in (0, 16%, 33%, 50%, 66%, 83%, 100%) fan speeds.
+  It is recommended to use a number that will capture one or more test points below the lowest level of fan normally used. For example, if 20% fan is the lowest commonly used speed, using 11 break points is recommended to test 10% and 20% fan at the low range.  </li>
+</ul>
+<p>Default calibration of the hotend with seven fan breakpoints:  </p>
+<div class="highlight"><pre><span></span><code>MPC_CALIBRATE HEATER=extruder FAN_BREAKPOINTS=7
+</code></pre></div>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Ensure that the part cooling fan is off before starting calibration.  </p>
+</div>
+<p>After successful  calibration the method will generate the key model parameters into the log for future reference.  </p>
+<p><img alt="Calibration Parameter Output" src="img/MPC_calibration_output.png" /></p>
+<p>A <code>SAVE_CONFIG</code> command is then required to commit these calibrated model parameters to the printer config or the user can manually update the values. The <em>SAVE_CONFIG</em> block should then look like: </p>
+<div class="highlight"><pre><span></span><code>#*# &lt;----------- SAVE_CONFIG -----------&gt;
+#*# DO NOT EDIT THIS BLOCK OR BELOW. The contents are auto-generated.
+#*# [extruder]
+#*# control = mpc
+#*# block_heat_capacity = 22.3110
+#*# sensor_responsiveness = 0.0998635
+#*# ambient_transfer = 0.155082
+#*# fan_ambient_transfer=0.155082, 0.20156, 0.216441
+</code></pre></div>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the [extruder] section is in a .cfg file other than printer.cfg the <code>SAVE_CONFIG</code> command may not be able to write the calibration parameters and klippy will provide an error. </p>
+</div>
+<p>These model parameters are not suitable for pre-configuration or are not explicitly determinable. Advanced users could tweak these post calibration based on the following guidance: Slightly increasing these values will increase the temperature where MPC settles and slightly decreasing them will decrease the settling temperature.  </p>
+<ul>
+<li><code>block_heat_capacity:</code><br />
+  Heat capacity of the heater block in (J/K).  </li>
+</ul>
+<ul>
+<li><code>ambient_transfer:</code><br />
+  Heat transfer from heater block to ambient in (W/K).  </li>
+</ul>
+<ul>
+<li><code>sensor_responsiveness:</code><br />
+  A single constant representing the coefficient of heat transfer from heater block to sensor and heat capacity of the sensor in (K/s/K).  </li>
+</ul>
+<ul>
+<li><code>fan_ambient_transfer:</code><br />
+  Heat transfer from heater block to ambient in with fan enabled in (W/K).  </li>
+</ul>
+<h1 id="support-macros">Support Macros<a class="headerlink" href="#support-macros" title="Permanent link">&para;</a></h1>
+<h2 id="temperature-wait">Temperature Wait<a class="headerlink" href="#temperature-wait" title="Permanent link">&para;</a></h2>
+<p>The following macro can be used to replace <code>M109</code> hotend temperature set and <code>M190</code> bed temperature set G-code commands with a macro utilizing <code>temperature_wait</code> G-codes. This can be utilized in systems where the sensor temperature takes an extended time to converge on the set temperature. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This behaviour occurs primarily because MPC controls the modelled block temperature and not the hotend temperature sensor. For almost all cases, when temperature sensor overshoot/undershoot occurs, the block modelled temperature will be correctly at the set temperature. However, the Kalico system performs actions based on the sensor temperature only which can lead to undesirable delays in print actions with stock <code>M109</code> and <code>M190</code> commands.</p>
+</div>
+<div class="highlight"><pre><span></span><code>[gcode_macro M109] # Wait Hotend Temp
+rename_existing: M109.1
+gcode:
+    #Parameters
+    {% set s = params.S|float %}
+
+    M104 {% for p in params %}{&#39;%s%s&#39; % (p, params[p])}{% endfor %}  # Set hotend temp
+    {% if s != 0 %}
+        TEMPERATURE_WAIT SENSOR=extruder MINIMUM={s-2} MAXIMUM={s+5}   # Wait for hotend temp (within n degrees)
+    {% endif %}
+
+
+[gcode_macro M190] # Wait Bed Temp
+rename_existing: M190.1
+gcode:
+    #Parameters
+    {% set s = params.S|float %}
+
+    M140 {% for p in params %}{&#39;%s%s&#39; % (p, params[p])}{% endfor %}   # Set bed temp
+    {% if s != 0 %}
+        TEMPERATURE_WAIT SENSOR=heater_bed MINIMUM={s-2} MAXIMUM={s+5}  # Wait for bed temp (within n degrees)
+    {% endif %}
+</code></pre></div>
+
+<h3 id="setting-fff-parameters-from-the-slicer">Setting FFF Parameters From The Slicer<a class="headerlink" href="#setting-fff-parameters-from-the-slicer" title="Permanent link">&para;</a></h3>
+<p>This macro will set FFF parameters automatically when the material type is passed from the slicer. </p>
+<div class="highlight"><pre><span></span><code><span class="k">[gcode_macro _SET_MPC_MATERIAL]</span>
+<span class="na">description</span><span class="o">:</span><span class="w"> </span><span class="s">Set heater MPC parameters for a given material</span>
+<span class="na">variable_filament_table</span><span class="o">:</span>
+<span class="w">    </span><span class="c1">## Update this table to adjust material settings</span>
+<span class="w">    </span><span class="na">{</span>
+<span class="w">        </span><span class="c1">## ( density, heat capacity )  # suggested heat capacity range</span>
+<span class="w">        </span><span class="na">&quot;PLA&quot;</span><span class="w">       </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.25, 2.20 ),</span><span class="w">  </span><span class="c1"># 1.80 - 2.20</span>
+<span class="w">        </span><span class="na">&quot;PETG&quot;</span><span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.27, 2.20 ),</span><span class="w">  </span><span class="c1"># 1.70 - 2.20</span>
+<span class="w">        </span><span class="na">&quot;PC+ABS&quot;</span><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.15, 2.20 ),</span><span class="w">  </span><span class="c1"># 1.50 - 2.20</span>
+<span class="w">        </span><span class="na">&quot;ABS&quot;</span><span class="w">       </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.06, 2.40 ),</span><span class="w">  </span><span class="c1"># 1.25 - 2.40</span>
+<span class="w">        </span><span class="na">&quot;ASA&quot;</span><span class="w">       </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.07, 2.10 ),</span><span class="w">  </span><span class="c1"># 1.30 - 2.10</span>
+<span class="w">        </span><span class="na">&quot;PA6&quot;</span><span class="w">       </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.12, 2.50 ),</span><span class="w">  </span><span class="c1"># 2.00 - 2.50</span>
+<span class="w">        </span><span class="na">&quot;PA&quot;</span><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.15, 2.50 ),</span><span class="w">  </span><span class="c1"># 2.00 - 2.50</span>
+<span class="w">        </span><span class="na">&quot;PC&quot;</span><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.20, 1.90 ),</span><span class="w">  </span><span class="c1"># 1.10 - 1.90</span>
+<span class="w">        </span><span class="na">&quot;TPU&quot;</span><span class="w">       </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.21, 2.00 ),</span><span class="w">  </span><span class="c1"># 1.50 - 2.00</span>
+<span class="w">        </span><span class="na">&quot;TPU-90A&quot;</span><span class="w">   </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.15, 2.00 ),</span><span class="w">  </span><span class="c1"># 1.50 - 2.00</span>
+<span class="w">        </span><span class="na">&quot;TPU-95A&quot;</span><span class="w">   </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.22, 2.00 ),</span><span class="w">  </span><span class="c1"># 1.50 - 2.00</span>
+<span class="w">        </span><span class="na">&quot;ABS-CF&quot;</span><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.11, 2.40 ),</span><span class="w">  </span><span class="c1"># 1.25 - 2.40</span>
+<span class="w">        </span><span class="na">&quot;ASA-CF&quot;</span><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.11, 2.10 ),</span><span class="w">  </span><span class="c1"># 1.30 - 2.10</span>
+<span class="w">        </span><span class="na">&quot;PA6-CF&quot;</span><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.19, 2.50 ),</span><span class="w">  </span><span class="c1"># 2.00 - 2.50</span>
+<span class="w">        </span><span class="na">&quot;PC+ABS-CF&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.22, 2.20 ),</span><span class="w">  </span><span class="c1"># 1.50 - 2.20</span>
+<span class="w">        </span><span class="na">&quot;PC+CF&quot;</span><span class="w">     </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.36, 1.90 ),</span><span class="w">  </span><span class="c1"># 1.10 - 1.90</span>
+<span class="w">        </span><span class="na">&quot;PLA-CF&quot;</span><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.29, 2.20 ),</span><span class="w">  </span><span class="c1"># 1.80 - 2.20</span>
+<span class="w">        </span><span class="na">&quot;PETG-CF&quot;</span><span class="w">   </span><span class="o">:</span><span class="w"> </span><span class="s">( 1.30, 2.20 ),</span><span class="w">  </span><span class="c1"># 1.70 - 2.20</span>
+<span class="w">    </span><span class="na">}</span>
+<span class="na">gcode</span><span class="o">:</span>
+<span class="w">    </span><span class="na">{% set material</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">params.MATERIAL | upper %}</span>
+<span class="w">    </span><span class="na">{% set heater</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">params.HEATER | default(&#39;extruder&#39;) %}</span>
+<span class="w">    </span><span class="na">{% set extruder_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">printer.configfile.settings[heater] %}</span>
+
+<span class="w">    </span><span class="na">{% if material in filament_table %}</span>
+<span class="w">        </span><span class="na">{% set (density, heat_capacity)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">filament_table[material] %}</span>
+
+<span class="w">        </span><span class="na">RESPOND PREFIX=🔥 MSG</span><span class="o">=</span><span class="s">&quot;Configured {heater} MPC for {material}. Density: {density}, Heat Capacity: {heat_capacity}&quot;</span>
+<span class="w">    </span><span class="na">{% else %}</span>
+<span class="w">        </span><span class="na">{% set density</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">extruder_config.filament_density %}</span>
+<span class="w">        </span><span class="na">{% set heat_capacity</span><span class="o">=</span><span class="s">extruder_config.filament_heat_capacity %}</span>
+
+<span class="w">        </span><span class="na">RESPOND PREFIX=🔥 MSG</span><span class="o">=</span><span class="s">&quot;Unknown material &#39;</span><span class="na">{material}&#39;, using default mpc parameters for {heater}&quot;</span>
+<span class="w">    </span><span class="na">{% endif %}</span>
+
+<span class="w">    </span><span class="na">MPC_SET HEATER</span><span class="o">=</span><span class="s">{heater} FILAMENT_DENSITY={density} FILAMENT_HEAT_CAPACITY={heat_capacity}</span>
+</code></pre></div>
+
+<p>The slicer must be configured to pass the current material type to your <code>PRINT_START</code> macro. For PrusaSlicer you should add the following parameter line to <code>print_start</code> in the Start G-Code section:</p>
+<div class="highlight"><pre><span></span><code>MATERIAL=[filament_type[initial_extruder]]
+</code></pre></div>
+
+<p>The print_start line, in PrusaSlicer, would look like:</p>
+<div class="highlight"><pre><span></span><code>start_print MATERIAL=[filament_type[initial_extruder]] EXTRUDER_TEMP={first_layer_temperature[initial_extruder]} BED_TEMP={first_layer_bed_temperature[initial_extruder]} CHAMBER_TEMP={chamber_temperature}
+</code></pre></div>
+
+<p>Then, in your <code>PRINT_START</code> macro include the following macro call:</p>
+<div class="highlight"><pre><span></span><code>_SET_MPC_MATERIAL MATERIAL={params.MATERIAL}
+</code></pre></div>
+
+<h1 id="real-time-model-state">Real-Time Model State<a class="headerlink" href="#real-time-model-state" title="Permanent link">&para;</a></h1>
+<p>The real-time temperatures and model states can be viewed from a browser by entering the following local address for your computer.</p>
+<div class="highlight"><pre><span></span><code>https://192.168.xxx.xxx:7125/printer/objects/query?extruder
+</code></pre></div>
+
+<p><img alt="Calibration" src="img/MPC_realtime_output.png" /></p>
+<h1 id="experimental-features">EXPERIMENTAL FEATURES<a class="headerlink" href="#experimental-features" title="Permanent link">&para;</a></h1>
+<h2 id="bed-heater">Bed Heater<a class="headerlink" href="#bed-heater" title="Permanent link">&para;</a></h2>
+<p>Using MPC for bed heater control is functional but the performance is not guaranteed or currently supported.  MPC for the bed can be configured simply.</p>
+<div class="highlight"><pre><span></span><code>[heater_bed]
+control: mpc
+heater_power: 400
+</code></pre></div>
+
+<ul>
+<li><code>control: mpc</code><br />
+<em>Required</em><br />
+  The temperature control method.  </li>
+</ul>
+<ul>
+<li><code>heater_power: 50</code><br />
+<em>Required</em><br />
+  The nameplate heater power in watts.  </li>
+</ul>
+<ul>
+<li><code>cooling_fan: fan_generic &lt;fan_name&gt;</code><br />
+<em>No Default Value</em><br />
+  This is the fan cooling the bed. Optional parameter to support bed fans.  </li>
+</ul>
+<p>The bed should be able to reach at least 90C to perform calibration with the following G-code. </p>
+<p><code>MPC_CALIBRATE HEATER=&lt;heater&gt; [TARGET=&lt;temperature&gt;] [FAN_BREAKPOINTS=&lt;value&gt;]</code>  </p>
+<ul>
+<li><code>HEATER=&lt;heater&gt;</code>:<br />
+  The bed heater to be calibrated.  </li>
+</ul>
+<ul>
+<li><code>TARGET=&lt;temperature&gt;</code>:<br />
+<em>Default Value: 90 (deg C)</em><br />
+  Sets the calibration temperature. The default of 90C is a good target for the bed.  </li>
+</ul>
+<ul>
+<li><code>FAN_BREAKPOINTS=&lt;value&gt;</code>:<br />
+<em>Default Value: 3</em><br />
+  Sets the number of fan setpoint to test during calibration.    </li>
+</ul>
+<p>Default calibration of the hotend with five fan breakpoints:  </p>
+<div class="highlight"><pre><span></span><code>MPC_CALIBRATE HEATER=heater_bed FAN_BREAKPOINTS=5
+</code></pre></div>
+
+<p>These calibrated model parameters need to be saved to the <em>SAVE_CONFIG</em> block manually or by using the <code>SAVE_CONFIG</code> command.</p>
+<h2 id="updating-calibration-parameters-at-runtime">Updating calibration parameters at runtime<a class="headerlink" href="#updating-calibration-parameters-at-runtime" title="Permanent link">&para;</a></h2>
+<p>Similar to <a href="G-Codes.html#set_heater_pid"><code>SET_HEATER_PID</code></a>, you can update your MPC calibration profile at runtime.</p>
+<p><code>MPC_SET HEATER=&lt;heater_name&gt; [BLOCK_HEAT_CAPACITY=0.0] [SENSOR_RESPONSIVENESS=0.0] [AMBIENT_TRANSFER=0.0] [FAN_AMBIENT_TRANSFER=0.01,0.02,0.03]</code></p>
+<h1 id="background">BACKGROUND<a class="headerlink" href="#background" title="Permanent link">&para;</a></h1>
+<h2 id="mpc-algorithm">MPC Algorithm<a class="headerlink" href="#mpc-algorithm" title="Permanent link">&para;</a></h2>
+<p>MPC models the hotend system as four thermal masses: ambient air, the filament, the heater block and the sensor. Heater power heats the modelled heater block directly. Ambient air heats or cools the heater block. Filament cools the heater block. The heater block heats or cools the sensor.  </p>
+<p>Every time the MPC algorithm runs it uses the following information to calculate a new temperature for the simulated hotend and sensor:  </p>
+<ul>
+<li>The last power setting for the hotend.  </li>
+<li>The present best-guess of the ambient temperature.  </li>
+<li>The effect of the fan on heat-loss to the ambient air.  </li>
+<li>The effect of filament feedrate on heat-loss to the filament. Filament is assumed to be at the same temperature as the ambient air.  </li>
+</ul>
+<p>Once this calculation is done, the simulated sensor temperature is compared to the measured temperature and a fraction of the difference is added to the modelled sensor and heater block temperatures. This drags the simulated system in the direction of the real system. Because only a fraction of the difference is applied, sensor noise is diminished and averages out to zero over time. Both the simulated and the real sensor exhibit the same (or very similar) latency. Consequently, the effects of latency are eliminated when these values are compared to each other. So, the simulated hotend is only minimally affected by sensor noise and latency.   </p>
+<p>SMOOTHING is the factor applied to the difference between simulated and measured sensor temperature. At its maximum value of 1, the simulated sensor temperature is continually set equal to the measured sensor temperature. A lower value will result in greater stability in MPC output power but also in decreased responsiveness. A value around 0.25 seems to work quite well.  </p>
+<p>No simulation is perfect and, anyway, real life ambient temperature changes. So MPC also maintains a best guess estimate of ambient temperature. When the simulated system is close to steady state the simulated ambient temperature is continually adjusted. Steady state is determined to be when the MPC algorithm is not driving the hotend at its limits (i.e., full or zero heater power) or when it is at its limit but temperatures are still not changing very much - which will occur at asymptotic temperature (usually when target temperature is zero and the hotend is at ambient).  </p>
+<p>Steady_state_rate is used to recognize the asymptotic condition. Whenever the simulated hotend temperature changes at an absolute rate less than steady_state_rate between two successive runs of the algorithm, the steady state logic is applied. Since the algorithm runs frequently, even a small amount of noise can result in a fairly high instantaneous rate of change of hotend temperature. In practice 1°C/s seems to work well for steady_state_rate.  </p>
+<p>When in steady state, the difference between real and simulated sensor temperatures is used to drive the changes to ambient temperature. However, when the temperatures are really close min_ambient_change ensures that the simulated ambient temperature converges relatively quickly. Larger values of min_ambient_change will result in faster convergence but will also cause the simulated ambient temperature to flutter somewhat chaotically around the ideal value. This is not a problem because the effect of ambient temperature is fairly small and short-term variations of even 10°C or more will not have a noticeable effect.  </p>
+<p>It is important to note that the simulated ambient temperature will only converge on real world ambient temperature if the ambient heat transfer coefficients are exactly accurate. In practice this will not be the case and the simulated ambient temperature therefore also acts a correction to these inaccuracies.  </p>
+<p>Finally, armed with a new set of temperatures, the MPC algorithm calculates how much power must be applied to get the heater block to target temperature in the next two seconds. This calculation takes into account the heat that is expected to be lost to ambient air and filament heating. This power value is then converted to a PWM output.  </p>
+<h2 id="additional-details">Additional Details<a class="headerlink" href="#additional-details" title="Permanent link">&para;</a></h2>
+<p>Please refer to that the excellent Marlin MPC Documentation for information on the model derivations, tuning methods, and heat transfer coefficients used in this feature.   </p>
+<h1 id="acknowledgements">Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permanent link">&para;</a></h1>
+<p>This feature is a port of the Marlin MPC implementation, and all credit goes to their team and community for pioneering this feature for open source 3D printing. The Marlin MPC documentation and github pages were heavily referenced and, in some cases directly copied and edited to create this document.  </p>
+<ul>
+<li>Marlin MPC Documentation: [<a href="https://marlinfw.org/docs/features/model_predictive_control.html">https://marlinfw.org/docs/features/model_predictive_control.html</a>]</li>
+<li>GITHUB PR that implemented MPC in Marlin: [<a href="https://github.com/MarlinFirmware/Marlin/pull/23751">https://github.com/MarlinFirmware/Marlin/pull/23751</a>]</li>
+<li>Marlin Source Code: [<a href="https://github.com/MarlinFirmware/Marlin">https://github.com/MarlinFirmware/Marlin</a>]</li>
+</ul>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://kalico.gg/discord" target="_blank" rel="noopener" title="Join our Discord server!" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M524.531 69.836a1.5 1.5 0 0 0-.764-.7A485 485 0 0 0 404.081 32.03a1.82 1.82 0 0 0-1.923.91 338 338 0 0 0-14.9 30.6 447.9 447.9 0 0 0-134.426 0 310 310 0 0 0-15.135-30.6 1.89 1.89 0 0 0-1.924-.91 483.7 483.7 0 0 0-119.688 37.107 1.7 1.7 0 0 0-.788.676C39.068 183.651 18.186 294.69 28.43 404.354a2.02 2.02 0 0 0 .765 1.375 487.7 487.7 0 0 0 146.825 74.189 1.9 1.9 0 0 0 2.063-.676A348 348 0 0 0 208.12 430.4a1.86 1.86 0 0 0-1.019-2.588 321 321 0 0 1-45.868-21.853 1.885 1.885 0 0 1-.185-3.126 251 251 0 0 0 9.109-7.137 1.82 1.82 0 0 1 1.9-.256c96.229 43.917 200.41 43.917 295.5 0a1.81 1.81 0 0 1 1.924.233 235 235 0 0 0 9.132 7.16 1.884 1.884 0 0 1-.162 3.126 301.4 301.4 0 0 1-45.89 21.83 1.875 1.875 0 0 0-1 2.611 391 391 0 0 0 30.014 48.815 1.86 1.86 0 0 0 2.063.7A486 486 0 0 0 610.7 405.729a1.88 1.88 0 0 0 .765-1.352c12.264-126.783-20.532-236.912-86.934-334.541M222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.241 52.844-59.241c29.665 0 53.306 26.82 52.843 59.239 0 32.654-23.41 59.241-52.843 59.241m195.38 0c-28.971 0-52.843-26.587-52.843-59.239s23.409-59.241 52.843-59.241c29.667 0 53.307 26.82 52.844 59.239 0 32.654-23.177 59.241-52.844 59.241"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.top", "navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.action.edit", "optimize"], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+    
+  </body>
+</html>
